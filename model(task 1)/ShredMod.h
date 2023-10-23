@@ -51,7 +51,7 @@ private:
 	void RKMethod(double& x, double& y, double e, bool flag, double z = 0);
 
 	//функция, находит значение phase на границе
-	double FindPhase(double e, double RR = -1000);
+	double FindPhase(double e, double RR = -1000, double yy = M_PI / 2, double xp = 0);
 
 	//вспомогательная функция для половинного деления
 	double F(double nn, double phase);

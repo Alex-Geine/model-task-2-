@@ -33,19 +33,22 @@ void ShredingerModel::RKMethod(double&x, double&y, double e, bool flag, double z
 
 
 //функция, находит значение phase на границе
-double ShredingerModel::FindPhase(double e, double RR) {
+double ShredingerModel::FindPhase(double e, double RR, double yy, double xx) {
 	
 	//начальное приближение
 	double
 		x = -R,
-		y = M_PI / 2;
+		y = yy;
 
 	if(RR == - 1000)
 		while (x <= R)
 			RKMethod(x, y, e, 1);
-	else
+	else {
+		x = xx;
 		while (x <= RR)
 			RKMethod(x, y, e, 1);
+	}
+		
 
 	return y;
 }
@@ -140,7 +143,8 @@ void ShredingerModel::FindFunction(int id) {
 	double
 		r = 1,	//начальные приближения
 		x = -R,
-		curPhase = 0,
+		xPast = x,
+		curPhase = M_PI /2,
 		curE = Roots[id].first,
 		stepX = 2 * R / pCount;
 
@@ -148,7 +152,7 @@ void ShredingerModel::FindFunction(int id) {
 	double Up = 0;
 	for (int i = 0; i < pCount; i++) {
 		x += stepX;
-		curPhase = FindPhase(curE, x);
+		curPhase = FindPhase(curE, x, curPhase, xPast);
 		RKMethod(curPhase, r, curE, 0);
 		pair<double, double> p;
 		p.first = x;
@@ -161,6 +165,7 @@ void ShredingerModel::FindFunction(int id) {
 		if (maxU < Up)
 			maxU = Up;
 		UPoints.push_back(Up);
+		xPast = x;
 	}
 	maxF = maxf;
 }
